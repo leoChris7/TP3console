@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Logging;
 
 namespace TP3console.Models.EntityFramework
 {
     public partial class FilmsDBContext : DbContext
     {
+        // Rajouter cela après avoir rajouter le package Microsoft.Extensions.Logging.Console
+        public static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
         public FilmsDBContext()
         {
         }
@@ -27,11 +31,23 @@ namespace TP3console.Models.EntityFramework
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseNpgsql("Server=localhost;port=5432;Database=FilmsDB;uid=postgres;password=postgres;");
+
+                optionsBuilder.UseLoggerFactory(MyLoggerFactory)
+                     .EnableSensitiveDataLogging()
+                     .UseNpgsql("Server=localhost;port=5432;Database=FilmsDB; uid = postgres; password = postgres; ");
+
+                // Pour le chargement différé
+                // optionsBuilder.UseLazyLoadingProxies();
             }
         }
 
+        /// <summary>
+        /// Création des clés étrangères
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Avis -> Film et Avis -> Utilisateur
             modelBuilder.Entity<Avi>(entity =>
             {
                 entity.HasKey(e => new { e.Film, e.Utilisateur })
@@ -50,6 +66,7 @@ namespace TP3console.Models.EntityFramework
                     .HasConstraintName("fk_avis_utilisateur");
             });
 
+            // Film -> Catégorie
             modelBuilder.Entity<Film>(entity =>
             {
                 entity.HasOne(d => d.CategorieNavigation)
