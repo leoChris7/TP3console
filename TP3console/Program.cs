@@ -14,7 +14,7 @@ namespace TP3console
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Exo2Q7();
+            Exo2Q10();
             Console.ReadKey();
         }
     
@@ -66,10 +66,32 @@ namespace TP3console
         {
             var ctx = new FilmsDBContext();
             Console.WriteLine("Films : ");
-            foreach (var film in ctx.Films.Where(x => x.Nom.StartsWith("le")))
+            foreach (var film in ctx.Films.Where(x => x.Nom.StartsWith("Le")))
             {
-                Console.WriteLine(film.Nom);
+                Console.WriteLine(film);
             }
+            Console.WriteLine("Nombre de films commençant par 'Le': "+ctx.Films.Where(x => x.Nom.StartsWith("Le")).Count());
+        }
+
+        public static void Exo2Q8()
+        {
+            var ctx = new FilmsDBContext();
+            Console.WriteLine("Note la plus basse: " + ctx.Avis.Min(Avis => Avis.Note));
+        }
+
+        public static void Exo2Q9()
+        {
+            var ctx = new FilmsDBContext();
+            int idfilm = ctx.Films.FirstOrDefault(c => c.Nom.ToLower() == "pulp fiction").Id;
+            Console.WriteLine("Moyenne de notes pour Pulp Fiction: " + 
+                ctx.Avis.Where(avis=>avis.Film == idfilm).Average(Avis => Avis.Note));
+        }
+
+        public static void Exo2Q10()
+        {
+            var ctx = new FilmsDBContext();
+            Console.WriteLine("Note la plus haute: " + 
+                ((Avi)(ctx.Avis.Where(x=>x.Note == ctx.Avis.Max(Avis => Avis.Note)).FirstOrDefault())).Utilisateur);
         }
 
         static void MainChargementExplicite(string[] args)
