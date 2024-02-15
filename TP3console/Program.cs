@@ -14,7 +14,16 @@ namespace TP3console
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Exo2Q10();
+            Crud crud = new Crud();
+
+            //crud.addUser("christle", "1234", "leo.christophe@etu.univ-savoie.fr");
+            //int idfilmArmee12Singes = new FilmsDBContext().Films.FirstOrDefault(x => x.Nom == "L'armee des douze singes").Id; est supprimé
+            int idCategorieDrame = new FilmsDBContext().Categories.FirstOrDefault(x => x.Nom == "Drame").Id;
+
+            //crud.ajouterAvis("C'était vraiment le pire film de tout les temps", (decimal)0.2, 1, 542);
+            //crud.deleteFilm(idfilmArmee12Singes);
+            //crud.modifyFilm(idfilmArmee12Singes, "", "Les planètes des petits chimpanzés", idCategorieDrame);
+            //Exo2Q10();
             Console.ReadKey();
         }
     
@@ -91,8 +100,10 @@ namespace TP3console
         {
             var ctx = new FilmsDBContext();
             Console.WriteLine("Note la plus haute: " + 
-                ((Avi)(ctx.Avis.Where(x=>x.Note == ctx.Avis.Max(Avis => Avis.Note)).FirstOrDefault())).Utilisateur);
+                ctx.Utilisateurs.FirstOrDefault(a=>a.Id == ((Avi)(ctx.Avis.Where(x=>x.Note == ctx.Avis.Max(Avis => Avis.Note)).FirstOrDefault())).Utilisateur));
         }
+
+
 
         static void MainChargementExplicite(string[] args)
         {
@@ -184,5 +195,89 @@ namespace TP3console
             }
             Console.ReadKey();
         }
+    }
+
+    class Crud
+    {
+        public void addUser(string Login, string Pwd, string Email)
+        {
+            using (var ctx = new FilmsDBContext())
+            {
+                // création et initialisation de l'objet
+                Utilisateur newUser = new Utilisateur
+                {
+                    Login = Login,
+                    Pwd = Pwd,
+                    Email = Email
+                };
+
+                // ajout au contexte
+                ctx.Utilisateurs.Add(newUser);
+
+                // sauvegarde du contexte
+                int nbchanges = ctx.SaveChanges();
+                Console.WriteLine("Nombre d'enregistrements modifiés ou ajoutés : " + nbchanges);
+            }
+        }
+
+        public void modifyFilm(int id, string newName, string newDesc, int newCat)
+        {
+            using (var ctx = new FilmsDBContext())
+            {
+                if (!String.IsNullOrEmpty(newName))
+                    ctx.Films.FirstOrDefault(x => x.Id == id).Nom = newName;
+                else if (!String.IsNullOrEmpty(newDesc))
+                    ctx.Films.FirstOrDefault(x => x.Id == id).Description = newDesc;
+                else if (!String.IsNullOrEmpty(newCat.ToString()))
+                    ctx.Films.FirstOrDefault(x => x.Id == id).Categorie = newCat;
+
+                int nbchanges = ctx.SaveChanges();
+                Console.WriteLine("Nombre d'enregistrements modifiés ou ajoutés : " + nbchanges);
+            }
+        }
+
+        public void deleteFilm(int id)
+        {
+            using(var ctx = new FilmsDBContext())
+            {
+                var avis = (ctx.Avis.Where(x=>x.Film == id));
+                foreach(Avi avi in avis)
+                {
+                    ctx.Remove(avi);
+                }
+
+                ctx.Remove(ctx.Films.FirstOrDefault(w => w.Id == id));
+
+                int nbchanges = ctx.SaveChanges();
+                Console.WriteLine("Nombre d'enregistrements modifiés ou ajoutés : " + nbchanges);
+            }
+        }
+
+        public void ajouterAvis(string avis, decimal note, int film, int utilisateur)
+        {
+            using (var ctx = new FilmsDBContext())
+            {
+                // création et initialisation de l'objet
+                Avi avi = new Avi
+                {
+                    Film = film,
+                    Utilisateur = utilisateur,
+                    Avis = avis,
+                    Note = note
+                };
+
+                // ajout au contexte
+                ctx.Avis.Add(avi);
+
+                // sauvegarde du contexte
+                int nbchanges = ctx.SaveChanges();
+                Console.WriteLine("Nombre d'enregistrements modifiés ou ajoutés : " + nbchanges);
+            }
+        }
+
+        //public void addMultipleFilmstoCategory(int FilmID, int categorieID)
+        //{
+        //    new FilmsDBContext().Categories.AddRange((IEnumerable<Categorie>)new FilmsDBContext().Films.FirstOrDefault(y=>y.Id==FilmID));
+        //}
     }
 }
