@@ -1,6 +1,7 @@
 ﻿using TP3console.Models.EntityFramework;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace TP3console
 {
@@ -12,6 +13,66 @@ namespace TP3console
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
+        {
+            Exo2Q7();
+            Console.ReadKey();
+        }
+    
+        public static void Exo2Q2()
+        {
+            var ctx = new FilmsDBContext();
+            foreach (var utilisateur in ctx.Utilisateurs)
+            {
+                Console.WriteLine(utilisateur.Email);
+            }
+        }
+
+        public static void Exo2Q3()
+        {
+            var ctx = new FilmsDBContext();
+            foreach (var utilisateur in ctx.Utilisateurs.OrderBy(utilisateur => utilisateur.Login))
+            {
+                Console.WriteLine(utilisateur.Login);
+            }
+        }
+
+        public static void Exo2Q4()
+        {
+            var ctx = new FilmsDBContext();
+            Categorie categorieAction = ctx.Categories.First(c => c.Nom == "Action");
+            Console.WriteLine("Categorie : " + categorieAction.Nom);
+            //Chargement des films dans categorieAction
+            ctx.Entry(categorieAction).Collection(c => c.Films).Load();
+            Console.WriteLine("Films : ");
+            foreach (var film in categorieAction.Films)
+            {
+                Console.WriteLine("Nom : " + film.Nom + " id: "+ film.Id);
+            }
+        }
+
+        public static void Exo2Q5()
+        {
+            var ctx = new FilmsDBContext();
+            Console.WriteLine("Nombre de catégories: " + ctx.Categories.Count());
+        }
+
+        public static void Exo2Q6()
+        {
+            var ctx = new FilmsDBContext();
+            Console.WriteLine("Note la plus basse: " + ctx.Avis.Min(Avis=>Avis.Note));
+        }
+
+        public static void Exo2Q7()
+        {
+            var ctx = new FilmsDBContext();
+            Console.WriteLine("Films : ");
+            foreach (var film in ctx.Films.Where(x => x.Nom.StartsWith("le")))
+            {
+                Console.WriteLine(film.Nom);
+            }
+        }
+
+        static void MainChargementExplicite(string[] args)
         {
             using (var ctx = new FilmsDBContext())
             {
@@ -26,7 +87,6 @@ namespace TP3console
                 }
             }
         }
-
         static void MainChargementDifféré(string[] args)
         {
             // Installation de l'extension nugget: Microsoft.EntityFrameworkCore.Proxies

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace TP3console.Models.EntityFramework
 {
     [Table("film")]
-    public partial class Film
+    public partial class Film 
     {
         public Film()
         {
@@ -30,5 +30,10 @@ namespace TP3console.Models.EntityFramework
         public virtual Categorie CategorieNavigation { get; set; } = null!;
         [InverseProperty("FilmNavigation")]
         public virtual ICollection<Avi> Avis { get; set; }
+        
+        public override string? ToString()
+        {
+            return $"ID Film: {this.Id} \nNom: {this.Nom} \nDescription: {this.Description} \nCatégorie: {this.Categorie}";
+        }
     }
 }

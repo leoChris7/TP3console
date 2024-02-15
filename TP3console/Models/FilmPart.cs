@@ -9,47 +9,34 @@ namespace TP3console.Models.EntityFramework
 {
     public class FilmPart
     {
-        private int idFilm;
-        private int idCategorie;
-        private string? titre;
+        private int id;
+        private string? nom;
         private string? description;
 
-        public int IdFilm
+        public int Id
         {
             get
             {
-                return idFilm;
+                return id;
             }
 
             set
             {
-                idFilm = value;
+                id = value;
             }
         }
 
-        public int IdCategorie
+
+        public string? Nom
         {
             get
             {
-                return idCategorie;
+                return nom;
             }
 
             set
             {
-                idCategorie = value;
-            }
-        }
-
-        public string? Titre
-        {
-            get
-            {
-                return titre;
-            }
-
-            set
-            {
-                titre = value;
+                nom = value;
             }
         }
 
@@ -66,9 +53,11 @@ namespace TP3console.Models.EntityFramework
             }
         }
 
+        //public ICollection<Avi>? Avis { get => avis; set => avis = value; }
+
         public override string? ToString()
         {
-            return $"ID Film: {this.IdFilm} \nID Catégorie: {this.IdCategorie} \nTitre: {this.Titre} \nDescription: {this.Description}";
+            return $"ID Film: {this.Id} \nNom: {this.Nom} \nDescription: {this.Description}";
         }
     }
 }

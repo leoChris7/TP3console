@@ -26,5 +26,10 @@ namespace TP3console.Models.EntityFramework
         [ForeignKey("Utilisateur")]
         [InverseProperty("Avis")]
         public virtual Utilisateur UtilisateurNavigation { get; set; } = null!;
+
+        public override string? ToString()
+        {
+            return $"ID Film: {this.Film} \nID Utilisateur: {this.Utilisateur} \nAvis: {this.Avis} \nNote: {this.Note}";
+        }
     }
 }
