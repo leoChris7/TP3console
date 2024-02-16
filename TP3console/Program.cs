@@ -275,9 +275,19 @@ namespace TP3console
             }
         }
 
-        //public void addMultipleFilmstoCategory(int FilmID, int categorieID)
-        //{
-        //    new FilmsDBContext().Categories.AddRange((IEnumerable<Categorie>)new FilmsDBContext().Films.FirstOrDefault(y=>y.Id==FilmID));
-        //}
+        public void addMultipleFilmstoCategory(int FilmID, int categorieID)
+        {
+            using (var ctx = new FilmsDBContext())
+            {
+                ctx.Categories.AddRange();
+
+                // ajout au contexte
+                ctx.Avis.Add(avi);
+
+                // sauvegarde du contexte
+                int nbchanges = ctx.SaveChanges();
+                Console.WriteLine("Nombre d'enregistrements modifiés ou ajoutés : " + nbchanges);
+            }
+        }
     }
 }

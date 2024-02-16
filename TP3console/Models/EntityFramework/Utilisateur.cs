@@ -29,10 +29,5 @@ namespace TP3console.Models.EntityFramework
 
         [InverseProperty("UtilisateurNavigation")]
         public virtual ICollection<Avi> Avis { get; set; }
-
-        public override string? ToString()
-        {
-            return $"ID Utilisateur: {this.Id} \nLogin: {this.Login} \nEmail: {this.Email} \nMot de passe: {this.Pwd}";
-        }
     }
 }

@@ -48,10 +48,5 @@ namespace TP3console.Models.EntityFramework
         // Chargement explicite
         [InverseProperty("CategorieNavigation")]
         public virtual ICollection<Film> Films { get; set; }
-
-        public override string? ToString()
-        {
-            return $"ID Catégorie: {this.Id} \nNom de la catégorie: {this.Nom} \nDescription: {this.Description}";
-        }
     }
 }

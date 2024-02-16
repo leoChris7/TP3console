@@ -31,9 +31,5 @@ namespace TP3console.Models.EntityFramework
         [InverseProperty("FilmNavigation")]
         public virtual ICollection<Avi> Avis { get; set; }
         
-        public override string? ToString()
-        {
-            return $"ID Film: {this.Id} \nNom: {this.Nom} \nDescription: {this.Description} \nCatégorie: {this.Categorie}";
-        }
     }
 }
